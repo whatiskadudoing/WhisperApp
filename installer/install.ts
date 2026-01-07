@@ -2,229 +2,140 @@
 
 /**
  * Koe (声) Installer
- * Beautiful terminal installer with animated waveform
  */
 
 import { Select } from "https://deno.land/x/cliffy@v0.25.7/prompt/mod.ts";
 import { colors } from "https://deno.land/x/cliffy@v0.25.7/ansi/colors.ts";
-import { tty } from "https://deno.land/x/cliffy@v0.25.7/ansi/tty.ts";
+
+const c = {
+  accent: (t: string) => colors.rgb24(t, 0x667EEA),
+  purple: (t: string) => colors.rgb24(t, 0x764BA2),
+  success: (t: string) => colors.rgb24(t, 0x48BB78),
+  dim: (t: string) => colors.rgb24(t, 0x718096),
+  white: colors.bold.white,
+};
+
+const enc = new TextEncoder();
+const write = (s: string) => Deno.stdout.writeSync(enc.encode(s));
 
 // ============================================================================
-// COLORS - Japanese indigo palette
+// MINI WAVE ANIMATION
 // ============================================================================
 
-const INDIGO = (text: string) => colors.rgb24(text, 0x3d4d76);
-const INDIGO_LIGHT = (text: string) => colors.rgb24(text, 0x5d6d96);
-const INDIGO_DIM = (text: string) => colors.rgb24(text, 0x8d9db6);
-const WHITE = colors.white;
-const DIM = colors.gray;
-const CYAN = colors.cyan;
-
-// ============================================================================
-// ANIMATED WAVEFORM
-// ============================================================================
-
-function generateWaveform(time: number, width = 40): string {
-  const bars: string[] = [];
-  const heights = [" ", "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█"];
-
-  for (let i = 0; i < width; i++) {
-    // Create smooth wave pattern
-    const wave1 = Math.sin(time * 3 + i * 0.3) * 0.5;
-    const wave2 = Math.sin(time * 2.1 + i * 0.5) * 0.3;
-    const wave3 = Math.sin(time * 4.5 + i * 0.2) * 0.2;
-
-    const combined = (wave1 + wave2 + wave3 + 1) / 2;
-    const heightIndex = Math.floor(combined * (heights.length - 1));
-    bars.push(heights[Math.max(0, Math.min(heights.length - 1, heightIndex))]);
-  }
-
-  return INDIGO(bars.join(""));
-}
-
-function generateMinimalWave(time: number): string {
-  const bars: string[] = [];
-  const chars = ["▁", "▂", "▃", "▄", "▅", "▆", "▇"];
+function miniWave(t: number): string {
+  const bars = " ▁▂▃▄▅▆▇█";
+  const out: string[] = [];
 
   for (let i = 0; i < 5; i++) {
-    const wave = Math.sin(time * 4 + i * 0.9);
-    const idx = Math.floor((wave + 1) / 2 * (chars.length - 1));
-    bars.push(chars[idx]);
+    const v = Math.abs(Math.sin(t * 4 + i * 1.2));
+    const idx = Math.floor(v * 8);
+    const color = i % 2 === 0 ? c.accent : c.purple;
+    out.push(color(bars[idx]));
   }
 
-  return INDIGO(bars.join(" "));
+  return out.join(" ");
+}
+
+function staticWave(): string {
+  return `${c.accent("▃")} ${c.purple("▅")} ${c.accent("▇")} ${c.purple("▅")} ${c.accent("▃")}`;
 }
 
 // ============================================================================
-// LOGO ANIMATION
+// INTRO
 // ============================================================================
 
-async function showAnimatedLogo(duration = 2000): Promise<void> {
-  const startTime = Date.now();
-  const encoder = new TextEncoder();
+async function intro(): Promise<void> {
+  write("\x1b[?25l");
+  const start = Date.now();
 
-  // Hide cursor
-  Deno.stdout.writeSync(encoder.encode("\x1b[?25l"));
-
-  while (Date.now() - startTime < duration) {
-    const time = (Date.now() - startTime) / 1000;
-
-    // Clear and draw
-    tty.cursorTo(0, 0).eraseScreen();
-
-    const wave = generateWaveform(time, 50);
-    const miniWave = generateMinimalWave(time);
-
-    const logo = `
+  while (Date.now() - start < 2000) {
+    const t = (Date.now() - start) / 1000;
+    console.clear();
+    console.log(`
 
 
-                    ${wave}
 
-                              ${INDIGO("声")}  ${colors.bold(WHITE("Koe"))}
-                              ${miniWave}
+                  ${c.accent("声")}  ${c.white("Koe")}
+                  ${miniWave(t)}
 
-                         ${DIM("Voice to Text")}
+             ${c.dim("Voice to Text")}
 
-
-`;
-
-    Deno.stdout.writeSync(encoder.encode(logo));
-    await sleep(50);
-  }
-
-  // Show cursor
-  Deno.stdout.writeSync(encoder.encode("\x1b[?25h"));
-}
-
-async function showStaticLogo(): Promise<void> {
-  const wave = INDIGO("▂▃▅▇▅▃▂▁▂▃▅▆▅▃▂▁▂▄▆▇▆▄▂▁▂▃▅▇▅▃▂▁▂▃▅▆▅▃▂▁▂▄▆▇▆▄▂");
-  const miniWave = INDIGO("▃ ▅ ▇ ▅ ▃");
-
-  console.log(`
-
-                    ${wave}
-
-                              ${INDIGO("声")}  ${colors.bold(WHITE("Koe"))}
-                              ${miniWave}
-
-                         ${DIM("Voice to Text")}
 
 `);
+    await new Promise(r => setTimeout(r, 50));
+  }
+  write("\x1b[?25h");
 }
 
 // ============================================================================
-// UTILITIES
+// PROGRESS
 // ============================================================================
 
-async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, ms));
+function bar(p: number): string {
+  const w = 25, f = Math.round(w * p), e = w - f;
+  return c.accent("█".repeat(f)) + c.dim("░".repeat(e)) + c.dim(` ${Math.round(p * 100)}%`);
 }
 
-class Spinner {
-  private frames = ["◐", "◓", "◑", "◒"];
-  private frameIndex = 0;
-  private intervalId?: number;
-  private message: string;
-  private encoder = new TextEncoder();
+async function step(msg: string, ms: number): Promise<void> {
+  const start = Date.now();
+  const spin = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏";
+  let i = 0;
 
-  constructor(message: string) {
-    this.message = message;
+  while (Date.now() - start < ms) {
+    write(`\r  ${c.accent(spin[i % 10])} ${msg}  ${bar((Date.now() - start) / ms)}`);
+    i++;
+    await new Promise(r => setTimeout(r, 80));
   }
-
-  start(): void {
-    this.intervalId = setInterval(() => {
-      const frame = INDIGO(this.frames[this.frameIndex]);
-      tty.cursorTo(0).eraseLine();
-      Deno.stdout.writeSync(this.encoder.encode(`\n                    ${frame} ${this.message}`));
-      this.frameIndex = (this.frameIndex + 1) % this.frames.length;
-    }, 100);
-  }
-
-  stop(finalMessage: string, success = true): void {
-    if (this.intervalId) clearInterval(this.intervalId);
-    tty.cursorTo(0).eraseLine();
-    const icon = success ? colors.green("✓") : colors.red("✗");
-    console.log(`                    ${icon} ${finalMessage}`);
-  }
+  write(`\r  ${c.success("✓")} ${msg}${" ".repeat(35)}\n`);
 }
 
 // ============================================================================
-// MAIN INSTALLER
+// MAIN
 // ============================================================================
-
-const MODELS = [
-  {
-    value: "small",
-    name: `${colors.bold("Small")}   ${DIM("466 MB")}  ${DIM("—")}  ${WHITE("Recommended for most users")}`
-  },
-  {
-    value: "tiny",
-    name: `${colors.bold("Tiny")}    ${DIM("75 MB")}   ${DIM("—")}  ${WHITE("Fastest, lightweight")}`
-  },
-  {
-    value: "large",
-    name: `${colors.bold("Large")}   ${DIM("2.9 GB")}  ${DIM("—")}  ${WHITE("Best accuracy")}`
-  },
-];
 
 async function main(): Promise<void> {
-  // Clear screen
-  console.clear();
-
-  // Show animated logo
-  await showAnimatedLogo(2500);
-
-  // Clear and show static logo
-  console.clear();
-  await showStaticLogo();
-
-  // Subtitle
-  console.log(DIM("                    Welcome! Let's set up your voice-to-text.\n"));
-
   try {
-    // Model selection
+    await intro();
+
+    console.clear();
+    console.log(`
+
+
+
+                  ${c.accent("声")}  ${c.white("Koe")}
+                  ${staticWave()}
+
+             ${c.dim("Voice to Text")}
+`);
+
     const model = await Select.prompt({
-      message: INDIGO("Select a model"),
-      options: MODELS,
-      default: "small",
+      message: "Select model",
+      options: [
+        { value: "small", name: `Small   ${c.dim("466 MB")}  Recommended` },
+        { value: "tiny", name: `Tiny    ${c.dim("75 MB")}   Fastest` },
+        { value: "large", name: `Large   ${c.dim("2.9 GB")}  Best quality` },
+      ],
     });
 
     console.log();
+    await step("Installing Koe...", 1500);
+    await step(`Downloading ${model} model...`, 2500);
+    await step("Setting up hotkey...", 600);
 
-    // Installation
-    const spinner = new Spinner("Installing Koe...");
-    spinner.start();
-    await sleep(1500);
-    spinner.stop("Koe installed");
+    console.log(`
+  ${c.success("━".repeat(45))}
 
-    const spinner2 = new Spinner(`Downloading ${model} model...`);
-    spinner2.start();
-    await sleep(2000);
-    spinner2.stop("Model ready");
+  ${c.white("Ready!")} Hold ${colors.bold("⌥ Space")} anywhere to transcribe.
 
-    const spinner3 = new Spinner("Configuring hotkey...");
-    spinner3.start();
-    await sleep(800);
-    spinner3.stop("Hotkey set to ⌥ Space");
+  ${c.dim("Open Koe from your Applications folder.")}
 
-    // Success
-    console.log();
-    console.log(colors.bold(`
-                    ${colors.green("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")}
+  ${c.success("━".repeat(45))}
+`);
+    Deno.exit(0);
 
-                    ${WHITE("Ready!")} Hold ${colors.bold("⌥ Space")} anywhere to transcribe.
-
-                    ${DIM("Open")} ${WHITE("Koe")} ${DIM("from your Applications folder.")}
-
-                    ${colors.green("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")}
-`));
-
-  } catch (error) {
-    if (error instanceof Deno.errors.Interrupted) {
-      console.log(DIM("\n                    Installation cancelled.\n"));
-    } else {
-      throw error;
-    }
+  } catch {
+    console.log(c.dim("\n  Cancelled.\n"));
+    Deno.exit(0);
   }
 }
 

@@ -4,10 +4,10 @@
 # Install WhisperApp with your preferred model variant
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- tiny
-#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- large-v3
-#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- all
+#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- tiny
+#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- large-v3
+#   curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- all
 #
 # Model options:
 #   none      - No bundled model, smallest download (~15MB), downloads model on first use
@@ -21,7 +21,7 @@
 set -e
 
 MODEL_VARIANT="${1:-tiny}"  # Default to tiny for good balance
-REPO_URL="https://github.com/whatiskadudoing/WhisperApp"
+REPO_URL="https://github.com/whatiskadudoing/koe"
 VERSION="1.0.0"
 
 # Colors

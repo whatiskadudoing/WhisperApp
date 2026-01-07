@@ -120,10 +120,10 @@ if [[ "$UPLOAD" == "true" ]]; then
 
 \`\`\`bash
 # Quick install (tiny model - recommended)
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash
 
 # Install with specific model
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- large-v3
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- large-v3
 \`\`\`
 
 ### Requirements
@@ -140,7 +140,7 @@ curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/ins
 
     echo ""
     echo "✅ Release uploaded to GitHub!"
-    echo "   https://github.com/whatiskadudoing/WhisperApp/releases/tag/v${VERSION}"
+    echo "   https://github.com/whatiskadudoing/koe/releases/tag/v${VERSION}"
 fi
 
 echo ""

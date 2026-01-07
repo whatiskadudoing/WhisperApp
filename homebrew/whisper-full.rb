@@ -2,10 +2,10 @@ cask "whisper-full" do
   version "1.0.0"
   sha256 :no_check  # Update with actual SHA256 when releasing
 
-  url "https://github.com/whatiskadudoing/WhisperApp/releases/download/v#{version}/Whisper-#{version}-all.dmg"
+  url "https://github.com/whatiskadudoing/koe/releases/download/v#{version}/Whisper-#{version}-all.dmg"
   name "Whisper (Full - All Models)"
   desc "Voice-to-text transcription app using OpenAI Whisper (all models bundled - full offline)"
-  homepage "https://github.com/whatiskadudoing/WhisperApp"
+  homepage "https://github.com/whatiskadudoing/koe"
 
   depends_on macos: ">= :ventura"
 

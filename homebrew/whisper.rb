@@ -3,10 +3,10 @@ cask "whisper" do
   sha256 :no_check  # Update with actual SHA256 when releasing
 
   # Default: tiny model bundled (good balance of size and functionality)
-  url "https://github.com/whatiskadudoing/WhisperApp/releases/download/v#{version}/Whisper-#{version}-tiny.dmg"
+  url "https://github.com/whatiskadudoing/koe/releases/download/v#{version}/Whisper-#{version}-tiny.dmg"
   name "Whisper"
   desc "Voice-to-text transcription app using OpenAI Whisper (tiny model)"
-  homepage "https://github.com/whatiskadudoing/WhisperApp"
+  homepage "https://github.com/whatiskadudoing/koe"
 
   depends_on macos: ">= :ventura"
 

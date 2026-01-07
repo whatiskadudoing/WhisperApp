@@ -48,20 +48,20 @@ Whisper is a native macOS app that transcribes your voice and types it wherever 
 ### Quick Install (Recommended)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash
 ```
 
 ### Install with Specific Model
 
 ```bash
 # Tiny model (~75MB) - Fastest
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- tiny
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- tiny
 
 # Large model (~3GB) - Best accuracy
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- large-v3
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- large-v3
 
 # All models (~5GB) - Full offline capability
-curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/WhisperApp/main/install.sh | bash -s -- all
+curl -fsSL https://raw.githubusercontent.com/whatiskadudoing/koe/main/install.sh | bash -s -- all
 ```
 
 ### Homebrew
@@ -77,7 +77,7 @@ brew install --cask whisper-full     # All models
 
 ### Manual Download
 
-Download the DMG from [Releases](https://github.com/whatiskadudoing/WhisperApp/releases):
+Download the DMG from [Releases](https://github.com/whatiskadudoing/koe/releases):
 
 | Variant | Size | Description |
 |---------|------|-------------|
@@ -140,7 +140,7 @@ The default shortcut is `Option+Space` (hold to record). This works globally acr
 
 ```bash
 # Clone the repository
-git clone https://github.com/whatiskadudoing/WhisperApp.git
+git clone https://github.com/whatiskadudoing/koe.git
 cd WhisperApp
 
 # Build (no bundled model)
@@ -222,9 +222,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 🐛 [Report a bug](https://github.com/whatiskadudoing/WhisperApp/issues/new?template=bug_report.md)
-- 💡 [Request a feature](https://github.com/whatiskadudoing/WhisperApp/issues/new?template=feature_request.md)
-- 💬 [Discussions](https://github.com/whatiskadudoing/WhisperApp/discussions)
+- 🐛 [Report a bug](https://github.com/whatiskadudoing/koe/issues/new?template=bug_report.md)
+- 💡 [Request a feature](https://github.com/whatiskadudoing/koe/issues/new?template=feature_request.md)
+- 💬 [Discussions](https://github.com/whatiskadudoing/koe/discussions)
 
 ---
 

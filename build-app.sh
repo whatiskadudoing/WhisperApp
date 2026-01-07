@@ -14,18 +14,22 @@
 
 set -e
 
-APP_NAME="Whisper"
-BUNDLE_ID="com.whisperapp.Whisper"
+APP_NAME="Koe"
+BUNDLE_ID="com.koe.app"
 VERSION="1.0.0"
 MODEL_VARIANT="${1:-none}"  # Default to no bundled model
 
-# Model sizes (approximate)
-declare -A MODEL_SIZES
-MODEL_SIZES[tiny]="75MB"
-MODEL_SIZES[base]="150MB"
-MODEL_SIZES[small]="500MB"
-MODEL_SIZES[medium]="1.5GB"
-MODEL_SIZES[large-v3]="3GB"
+# Function to get model size
+get_model_size() {
+    case "$1" in
+        tiny) echo "75MB" ;;
+        base) echo "150MB" ;;
+        small) echo "500MB" ;;
+        medium) echo "1.5GB" ;;
+        large-v3) echo "3GB" ;;
+        *) echo "unknown" ;;
+    esac
+}
 
 # Available models
 MODELS=("tiny" "base" "small" "medium" "large-v3")
@@ -58,7 +62,7 @@ echo "📦 Model variant: $MODEL_VARIANT"
 if [[ "$MODEL_VARIANT" == "all" ]]; then
     echo "   Will bundle ALL models (~5GB total)"
 elif [[ "$MODEL_VARIANT" != "none" ]]; then
-    echo "   Will bundle $MODEL_VARIANT model (~${MODEL_SIZES[$MODEL_VARIANT]})"
+    echo "   Will bundle $MODEL_VARIANT model (~$(get_model_size "$MODEL_VARIANT"))"
 else
     echo "   No models bundled (smallest build, models downloaded on first use)"
 fi
@@ -190,9 +194,11 @@ cat > "${CONTENTS_DIR}/Info.plist" << EOF
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSMicrophoneUsageDescription</key>
-    <string>Whisper needs microphone access to transcribe your voice.</string>
+    <string>Koe needs microphone access to transcribe your voice.</string>
     <key>NSAppleEventsUsageDescription</key>
-    <string>Whisper needs accessibility access to type transcribed text.</string>
+    <string>Koe needs to send keystrokes to type transcribed text.</string>
+    <key>NSAccessibilityUsageDescription</key>
+    <string>Koe needs accessibility access to type transcribed text into other applications.</string>
     <key>WhisperDefaultModel</key>
     <string>${DEFAULT_MODEL}</string>
     <key>WhisperBundledModels</key>

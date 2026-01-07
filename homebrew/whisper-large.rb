@@ -2,10 +2,10 @@ cask "whisper-large" do
   version "1.0.0"
   sha256 :no_check  # Update with actual SHA256 when releasing
 
-  url "https://github.com/whatiskadudoing/WhisperApp/releases/download/v#{version}/Whisper-#{version}-large-v3.dmg"
+  url "https://github.com/whatiskadudoing/koe/releases/download/v#{version}/Whisper-#{version}-large-v3.dmg"
   name "Whisper (Large Model)"
   desc "Voice-to-text transcription app using OpenAI Whisper (large-v3 model - best accuracy)"
-  homepage "https://github.com/whatiskadudoing/WhisperApp"
+  homepage "https://github.com/whatiskadudoing/koe"
 
   depends_on macos: ">= :ventura"
 

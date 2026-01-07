@@ -49,7 +49,7 @@ Feature suggestions are tracked as GitHub issues. When creating a feature reques
 
 ```bash
 # Fork and clone the repository
-git clone https://github.com/whatiskadudoing/WhisperApp.git
+git clone https://github.com/whatiskadudoing/koe.git
 cd WhisperApp
 
 # Build the project
@@ -159,7 +159,7 @@ Debug logs are written to `/tmp/whisper_debug.log`. Include relevant logs when r
 
 ## Questions?
 
-Feel free to open a [Discussion](https://github.com/whatiskadudoing/WhisperApp/discussions) if you have questions or want to discuss ideas before implementing them.
+Feel free to open a [Discussion](https://github.com/whatiskadudoing/koe/discussions) if you have questions or want to discuss ideas before implementing them.
 
 ## Recognition
 
